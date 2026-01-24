@@ -5,6 +5,7 @@ type ApiError = { ok: false; message: string };
 type ApiResponse = ApiSuccess | ApiError;
 
 const InsertDbPage = () => {
+  const [comment, setComment] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
@@ -14,8 +15,8 @@ const InsertDbPage = () => {
     setError(null);
     setDone(false);
 
-    const form = e.currentTarget;
-    const comment = (form.elements.namedItem('comment') as HTMLInputElement).value;
+    // const form = e.currentTarget;
+    // const comment = (form.elements.namedItem('comment') as HTMLInputElement).value;
 
     try {
       const res = await fetch('/api/comments', {
@@ -31,7 +32,7 @@ const InsertDbPage = () => {
       }
 
       setDone(true);
-      form.reset();
+      setComment('');
     } catch (error) {
       if (error instanceof Error) setError(error.message);
     }
@@ -39,7 +40,13 @@ const InsertDbPage = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <input type="text" placeholder="write a comment" name="comment" />
+      <input
+        type="text"
+        placeholder="write a comment"
+        name="comment"
+        value={comment}
+        onChange={(e) => setComment(e.currentTarget.value)}
+      />
       <button type="submit">Submit</button>
 
       {done && <p>✅ 저장 완료</p>}

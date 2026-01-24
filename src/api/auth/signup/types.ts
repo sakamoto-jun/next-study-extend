@@ -8,6 +8,7 @@ interface SignupInput {
 }
 
 type SuccessResponse = { ok: true };
+type SignupApiResponse = SuccessResponse | ErrorResponse;
 
 interface SignupRequest extends NextApiRequest {
   body: Partial<SignupInput>;
@@ -15,4 +16,4 @@ interface SignupRequest extends NextApiRequest {
 
 type SignupResponse = NextApiResponse<SuccessResponse | ErrorResponse>;
 
-export type { SignupInput, SignupRequest, SignupResponse };
+export type { SignupInput, SignupRequest, SignupResponse, SignupApiResponse };
