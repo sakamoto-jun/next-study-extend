@@ -11,7 +11,7 @@ const SignupMain = () => {
 
   const { mutate } = useMutation(signupMutationOptions());
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!name || !password || !email) {
