@@ -1,10 +1,17 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { signIn, SignInOptions, SignInResponse, useSession } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
 
 const SigninMain = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const session = useSession();
+  const { mutate, isPending } = useMutation(signinMutationOptions());
+
+  const is_logged_in = session.status === 'authenticated';
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,7 +21,7 @@ const SigninMain = () => {
       return;
     }
 
-    // mutate({ name, password, email });
+    mutate({ email, password });
   };
 
   return (
@@ -34,11 +41,42 @@ const SigninMain = () => {
             placeholder="비밀번호"
             onChange={(e) => setPassword(e.currentTarget.value)}
           />
-          <Button type="submit">로그인</Button>
+          <Button type="submit" disabled={isPending || is_logged_in}>
+            {isPending ? '로그인중...' : '로그인'}
+          </Button>
         </form>
+        {is_logged_in && <Button className="mt-[12px] bg-rose-600">로그아웃</Button>}
       </section>
     </main>
   );
 };
 
 export { SigninMain };
+
+function signinMutationOptions(): UseMutationOptions<
+  SignInResponse | undefined,
+  Error,
+  SignInOptions & {
+    email: string;
+    password: string;
+  }
+> {
+  return {
+    mutationFn: async (params) => {
+      const res = await signIn('credentials', {
+        redirect: false,
+        ...params,
+      });
+
+      if (!res?.ok) throw new Error('로그인에 실패했습니다.');
+
+      return res;
+    },
+    onError: (error) => {
+      alert(error.message);
+    },
+    onSuccess: () => {
+      alert('로그인에 성공했습니다.');
+    },
+  };
+}
