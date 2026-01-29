@@ -1,7 +1,13 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { signIn, SignInOptions, SignInResponse, useSession } from 'next-auth/react';
+import {
+  signIn,
+  SignInOptions,
+  SignInResponse,
+  signOut,
+  useSession,
+} from 'next-auth/react';
 import { FormEvent, useState } from 'react';
 
 const SigninMain = () => {
@@ -45,7 +51,11 @@ const SigninMain = () => {
             {isPending ? '로그인중...' : '로그인'}
           </Button>
         </form>
-        {is_logged_in && <Button className="mt-[12px] bg-rose-600">로그아웃</Button>}
+        {is_logged_in && (
+          <Button className="mt-[12px] bg-rose-600" onClick={() => signOut()}>
+            로그아웃
+          </Button>
+        )}
       </section>
     </main>
   );

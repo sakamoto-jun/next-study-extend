@@ -3,7 +3,7 @@ import NextAuth, { AuthOptions, DefaultSession, DefaultUser } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import { JWT } from 'next-auth/jwt';
+import { JWT as NextAuthJWT } from 'next-auth/jwt';
 
 interface ExtendsUser extends DefaultUser {}
 
@@ -20,7 +20,7 @@ declare module 'next-auth/jwt' {
   }
 }
 
-const auth_options: AuthOptions = {
+export const auth_options: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -77,8 +77,8 @@ const auth_options: AuthOptions = {
       const token = jwt.sign(params.token ?? {}, params.secret);
       return token;
     },
-    decode: (parmas) => {
-      const decoded = jwt.verify(parmas.token ?? '', parmas.secret) as JWT;
+    decode: (params) => {
+      const decoded = jwt.verify(params.token ?? '', params.secret) as NextAuthJWT;
       return decoded;
     },
   },
