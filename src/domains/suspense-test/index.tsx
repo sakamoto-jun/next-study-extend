@@ -1,19 +1,21 @@
 import { fetchUserList } from '@/api/user/client';
 import { Suspense } from '@/components/Suspense';
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 
-const userListQuery = queryOptions({
+export const userListQuery = queryOptions({
   queryKey: ['user-list'],
   queryFn: () => fetchUserList(),
 });
 
 const SuspenseTestMain = () => {
-  const { data } = useSuspenseQuery(userListQuery);
+  const { data } = useQuery(userListQuery);
+
+  console.log(data);
 
   return (
     <main>
       <ul>
-        {data.map((item) => (
+        {data?.map((item) => (
           <li key={item.id}>{item.name}</li>
         ))}
       </ul>
@@ -23,9 +25,9 @@ const SuspenseTestMain = () => {
 
 const SuspenseTestMainWithSuspense = () => {
   return (
-    <Suspense>
-      <SuspenseTestMain />
-    </Suspense>
+    // <Suspense>
+    <SuspenseTestMain />
+    // </Suspense>
   );
 };
 
