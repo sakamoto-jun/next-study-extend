@@ -7,5 +7,9 @@ export async function fetchUserList(): Promise<User[]> {
 
   const data = (await res.json()) as User[];
 
-  return data;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(data);
+    }, 2000);
+  });
 }
